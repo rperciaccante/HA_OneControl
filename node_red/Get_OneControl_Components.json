@@ -1,0 +1,521 @@
+[
+    {
+        "id": "91a63b54.8ce97",
+        "type": "tab",
+        "label": "OneControl - Initialize",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "dbef2d26.c5bbf",
+        "type": "inject",
+        "z": "91a63b54.8ce97",
+        "name": "Trigger Flow",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 120,
+        "wires": [
+            [
+                "e4a529f0.d29ee"
+            ]
+        ]
+    },
+    {
+        "id": "a29e47cd.f76fa8",
+        "type": "http request",
+        "z": "91a63b54.8ce97",
+        "name": "Get List of Things",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.1.4:8080/rest/things/",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 130,
+        "y": 360,
+        "wires": [
+            [
+                "5a778c1a.3d051c"
+            ]
+        ]
+    },
+    {
+        "id": "5a778c1a.3d051c",
+        "type": "function",
+        "z": "91a63b54.8ce97",
+        "name": "Split items up into individual records",
+        "func": "var msg1 = {}\n\nfor (var i = 0; i < msg.payload.length; i++) {\n    msg1.payload = msg.payload[i]\n    //msg.entity = split(\" \");\n    node.send(msg1)\n}\n//return msg; \"${msg.attendee.transUserID}\",",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 400,
+        "wires": [
+            [
+                "d1d5d76e.284668"
+            ]
+        ]
+    },
+    {
+        "id": "d1d5d76e.284668",
+        "type": "function",
+        "z": "91a63b54.8ce97",
+        "name": "Loop through Items and Channels",
+        "func": "function capitolizeFirst(string) {\n var output = string.replace(/\\w\\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});\n return output;\n}\n\nvar msg1 = {}\nvar channels = msg.payload.channels\nvar a = {}\nvar b = \"\"\nvar topic_base = \"\"\n\n\nUID = msg.payload.UID.replace(/:/g, \"_\")\nUID = UID.replace(/-/g, \"_\")\n\nfor (var i = 0; i < msg.payload.channels.length; i++) {\n    UID = msg.payload.channels[i].uid.replace(/:/g, \"_\")\n    UID = UID.replace(/-/g, \"_\")\n    a = msg.payload.channels[i].channelTypeUID.split(\":\")\n    msg1.device = {}\n   \n    msg1.base =     msg.payload.channels[i]\n\n    msg1.url =      \"http://192.168.1.4:8080/rest/items/\"+UID\n    msg1.payload = {\n        \"name\":                         capitolizeFirst(msg.payload.label + \" \" + a[1]),\n            \"device\": {\n            \"sw_version\":               \"0.0.0.1\",\n            \"identifiers\":              \"rperciaccante\",\n            \"model\":                    \"Unknown\",\n            \"manufacturer\":             \"Lippert Components\",\n            \"via_device\":               \"Lippert Gateway\"\n            },\n        \"unique_id\":                    UID,\n        }\n        \n      switch(msg.payload.channels[i].itemType) {\n        case \"Number\":\n            msg1.device.type =                  \"sensor\"\n            msg1.device.uid =                   UID\n            msg1.device.name =                  capitolizeFirst(msg.payload.label + \" \" + a[1])\n            topic_base =                        \"homeassistant/\"+msg1.device.type +\"/\"  + UID\n            topic_base =                        \"homeassistant/\"+msg1.device.type +\"/\"  + UID\n            msg1.payload.state_topic=           topic_base + \"/state\"\n            msg1.topic =                        topic_base + \"/config\"\n            break;\n        case \"String\":\n            msg1.device.type =                  \"sensor\"\n            msg1.device.uid =                   UID\n            msg1.device.name =                  capitolizeFirst(msg.payload.label + \" \" + a[1])\n            topic_base =                        \"homeassistant/\"+msg1.device.type +\"/\"  + UID\n            msg1.payload.state_topic=           topic_base + \"/state\"\n            msg1.topic =                        topic_base + \"/config\"\n            msg1.payload.state_on =             \"ON\"\n            msg1.payload.state_off =            \"OFF\"\n            msg1.payload.payload_on =           \"ON\"\n            msg1.payload.payload_off =          \"OFF\"\n            break;\n        case \"Switch\":\n            msg1.device.type = \"switch\"\n            msg1.device.uid = UID\n            msg1.device.name = capitolizeFirst(msg.payload.label + \" \" + a[1])\n            topic_base =                   \"homeassistant/\"+msg1.device.type +\"/\"  + UID\n            msg1.payload.state_topic=           topic_base + \"/state\"\n            msg1.topic =                        topic_base + \"/config\"\n            msg1.payload.command_topic =        topic_base + \"/set\"\n            msg1.payload.json_attributes_topic  = topic_base + \"/attributes\"\n            msg1.payload.payload_on =           \"on\"\n            msg1.payload.payload_off = \"off\"\n            msg1.payload.state_on =  \"ON\"\n            msg1.payload.state_off = \"OFF\"\n            break;\n        case \"Dimmer\":\n            msg1.device.type = \"switch\"\n            msg1.device.uid = UID\n            msg1.device.name = capitolizeFirst(msg.payload.label + \" \" + a[1])\n            topic_base =                   \"homeassistant/\"+msg1.device.type +\"/\"  + UID\n            msg1.payload.state_topic=           topic_base + \"/state\"\n            msg1.topic =                        topic_base + \"/config\"\n            msg1.payload.command_topic =        topic_base + \"/set\"\n            msg1.payload.json_attributes_topic  = topic_base + \"/attributes\"\n            msg1.payload.payload_on =           \"ON\"\n            msg1.payload.payload_off = \"OFF\"\n            msg1.payload.state_on =  \"ON\"\n            msg1.payload.state_off = \"OFF\"\n            break;\n        case \"Color\":\n            msg1.device.type =                  \"sensor\"\n            msg1.device.uid =                   UID\n            msg1.device.name =                  capitolizeFirst(msg.payload.label + \" \" + a[1])\n            topic_base =                        \"homeassistant/\"+msg1.device.type +\"/\"  + UID\n            topic_base =                        \"homeassistant/\"+msg1.device.type +\"/\"  + UID\n            msg1.payload.state_topic=           topic_base + \"/state\"\n            msg1.topic =                        topic_base + \"/config\"\n            break;\n        case \"Location\":\n            msg1.device.type =                  \"sensor\"\n            msg1.device.uid =                   UID\n            msg1.device.name =                  capitolizeFirst(msg.payload.label + \" \" + a[1])\n            topic_base =                        \"homeassistant/\"+msg1.device.type +\"/\"  + UID\n            topic_base =                        \"homeassistant/\"+msg1.device.type +\"/\"  + UID\n            msg1.payload.state_topic=           topic_base + \"/state\"\n            msg1.topic =                        topic_base + \"/config\"\n            break;\n        default:\n            msg1.device.type = \"fault\"\n    }\n        msg1.mqtt_config = msg1.payload\n        node.send(msg1)\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 160,
+        "wires": [
+            [
+                "4722b730.4951e8"
+            ]
+        ]
+    },
+    {
+        "id": "4722b730.4951e8",
+        "type": "http request",
+        "z": "91a63b54.8ce97",
+        "name": "Make API Request to OneControl",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 560,
+        "y": 200,
+        "wires": [
+            [
+                "cef23ea5.fd841",
+                "bd30ffe7.2b89b8"
+            ]
+        ]
+    },
+    {
+        "id": "2262923b.ee6486",
+        "type": "function",
+        "z": "91a63b54.8ce97",
+        "name": "Build CSV for Details",
+        "func": "var msg1 = {}\nmsg1.details = {\n    \"baseUid\":          msg.event.NodeID,\n    \"uid\":              msg.device.uid,\n    \"type\":             msg.device.type,\n    \"name\":             msg.device.name,\n    \"label\":            msg.payload.label,\n    \"id\":               msg.base.id,\n    \"channelTypeUID\":   msg.base.channelTypeUID,\n    \"itemType\":         msg.base.itemType,\n    \"kind\":             msg.base.kind\n    }\n    \n\n    msg1.payload =  msg.event.NodeID + \",\" + msg1.details.uid + \",\" + msg.event.NodeType + \",\" + msg1.details.type + \",\" + msg1.details.name + \",\"\n    msg1.payload += msg1.details.label + \",\" + msg1.details.id + \",\" + msg1.details.channelTypeUID + \",\"\n    msg1.payload += msg1.details.itemType + \",\" + msg1.details.kind\nreturn msg1;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 280,
+        "wires": [
+            [
+                "34583ff5.2f957"
+            ]
+        ]
+    },
+    {
+        "id": "c2b67d41.15907",
+        "type": "file",
+        "z": "91a63b54.8ce97",
+        "name": "Write to OutputFile",
+        "filename": "",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 510,
+        "y": 400,
+        "wires": [
+            [
+                "5496c0ce.023b48"
+            ]
+        ]
+    },
+    {
+        "id": "5496c0ce.023b48",
+        "type": "debug",
+        "z": "91a63b54.8ce97",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "cef23ea5.fd841",
+        "type": "debug",
+        "z": "91a63b54.8ce97",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "8370ad37.5b81a",
+        "type": "change",
+        "z": "91a63b54.8ce97",
+        "name": "Set Flow Variables",
+        "rules": [
+            {
+                "t": "set",
+                "p": "OutputFile",
+                "pt": "flow",
+                "to": "/config/packages/OneControl/OneControl_Components.csv",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "WriteToFile",
+                "pt": "flow",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "ResetOutputFile",
+                "pt": "flow",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "AddColumnHeaders",
+                "pt": "flow",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5ce6dd11.97b244",
+        "type": "inject",
+        "z": "91a63b54.8ce97",
+        "name": "Trigger Flow",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 40,
+        "wires": [
+            [
+                "8370ad37.5b81a"
+            ]
+        ]
+    },
+    {
+        "id": "34583ff5.2f957",
+        "type": "switch",
+        "z": "91a63b54.8ce97",
+        "name": "Write to File set in variables?",
+        "property": "WriteToFile",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "false"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 540,
+        "y": 320,
+        "wires": [
+            [
+                "23b0cbb8.f830ec"
+            ],
+            [
+                "189d6de4.5e40fa"
+            ]
+        ]
+    },
+    {
+        "id": "23b0cbb8.f830ec",
+        "type": "debug",
+        "z": "91a63b54.8ce97",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "189d6de4.5e40fa",
+        "type": "change",
+        "z": "91a63b54.8ce97",
+        "name": "Set Filename from flow variable",
+        "rules": [
+            {
+                "t": "set",
+                "p": "filename",
+                "pt": "msg",
+                "to": "OutputFile",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 360,
+        "wires": [
+            [
+                "c2b67d41.15907"
+            ]
+        ]
+    },
+    {
+        "id": "bd30ffe7.2b89b8",
+        "type": "function",
+        "z": "91a63b54.8ce97",
+        "name": "Generate Event Record",
+        "func": "// Catch inbound payloads into variables\n\nvar strTopic = msg.topic\n\nfunction cleanUID(i) {\n    i = i.replace(/:/g, \"_\")\n    i = i.replace(/-/g, \"_\")\n    return i\n}\nmsg.event = {}\n\n// Take the inbound topic and break it up into an array\nvar arrTopic =  strTopic.split(\"/\");\nvar arrNode = cleanUID(arrTopic[2])\narrNode = arrNode.split(\"_\");\n\n// Get base Node ID\nvar strNodeID  = arrNode.indexOf(\"thing\") + 1\n\n// Break up the incoming info for the node type\nvar strNodeType = \"\"\nvar intNodeTypeStart  = arrNode.indexOf(\"idsmyrv\") + 1\nvar intNodeTypeEnd  = arrNode.indexOf(\"thing\") - 1\nvar intNodeTypeFieldCt = arrNode.indexOf(\"thing\") - intNodeTypeStart\n\nvar i = intNodeTypeStart\nwhile (i<=intNodeTypeFieldCt)  {  \n    if (i != intNodeTypeFieldCt) {\n        strNodeType = strNodeType + arrNode[i] + \"_\"\n    } else {\n        strNodeType = strNodeType + arrNode[i]\n    }\n    i++; \n    }\n\n\n// Break up the incoming info for the channel type\nvar strChannelType = \"\"\nvar intChannelStart  = arrNode.indexOf(\"thing\") + 2\nvar intChannelDEnd  = arrNode.length - 1\nvar intChannelFieldCt = intChannelDEnd - (intChannelStart -1)\n\ni = intChannelStart\nwhile (i<=intChannelDEnd)  {  \n   if (i != intChannelDEnd) {\n       strChannelType = strChannelType + arrNode[i] + \"_\"\n   } else {\n        strChannelType = strChannelType + arrNode[i]\n    }\n    i++; \n    }\n\n// Build an event payload \nmsg.event = {\n    \"NodeType\":     strNodeType,\n    \"NodeID\":       arrNode[strNodeID],\n    \"ChannelType\":  strChannelType,\n    \"EventType\":    arrTopic[3],\n    \"EventClass\":   msg.payload.type\n    }\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 240,
+        "wires": [
+            [
+                "2262923b.ee6486",
+                "71938da3.97e54c"
+            ]
+        ]
+    },
+    {
+        "id": "71938da3.97e54c",
+        "type": "debug",
+        "z": "91a63b54.8ce97",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "b285d56a.508b2",
+        "type": "catch",
+        "z": "91a63b54.8ce97",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 880,
+        "y": 20,
+        "wires": [
+            [
+                "d49b1c25.1e60b"
+            ]
+        ]
+    },
+    {
+        "id": "d49b1c25.1e60b",
+        "type": "debug",
+        "z": "91a63b54.8ce97",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1030,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "d5d809fd.01e9",
+        "type": "change",
+        "z": "91a63b54.8ce97",
+        "name": "Set Filename from flow variable",
+        "rules": [
+            {
+                "t": "set",
+                "p": "filename",
+                "pt": "msg",
+                "to": "OutputFile",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 170,
+        "y": 200,
+        "wires": [
+            [
+                "919efd79.568fc8"
+            ]
+        ]
+    },
+    {
+        "id": "d6e9fc78.b333c8",
+        "type": "file",
+        "z": "91a63b54.8ce97",
+        "name": "Write to OutputFile",
+        "filename": "",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 130,
+        "y": 320,
+        "wires": [
+            [
+                "a29e47cd.f76fa8"
+            ]
+        ]
+    },
+    {
+        "id": "e4a529f0.d29ee",
+        "type": "switch",
+        "z": "91a63b54.8ce97",
+        "name": "Reset Output File?",
+        "property": "ResetOutputFile",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "false"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "a29e47cd.f76fa8"
+            ],
+            [
+                "d5d809fd.01e9"
+            ]
+        ]
+    },
+    {
+        "id": "b2fe5b16.be2918",
+        "type": "function",
+        "z": "91a63b54.8ce97",
+        "name": "Define CSV Columns",
+        "func": "msg.payload = \"Base UID,\"\nmsg.payload += \"UID,\"\nmsg.payload += \"Node Type,\"\nmsg.payload += \"Type,\"\nmsg.payload += \"Name,\"\nmsg.payload += \"Label,\"\nmsg.payload += \"ID,\"\nmsg.payload += \"Channel Type UID,\"\nmsg.payload += \"Item Type,\"\nmsg.payload += \"Kind\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 140,
+        "y": 280,
+        "wires": [
+            [
+                "d6e9fc78.b333c8"
+            ]
+        ]
+    },
+    {
+        "id": "919efd79.568fc8",
+        "type": "switch",
+        "z": "91a63b54.8ce97",
+        "name": "Add Column Headers?",
+        "property": "AddColumnHeaders",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 140,
+        "y": 240,
+        "wires": [
+            [
+                "b2fe5b16.be2918"
+            ],
+            [
+                "d6e9fc78.b333c8"
+            ]
+        ]
+    }
+]
