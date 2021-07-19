@@ -1,0 +1,154 @@
+# This config file monitors the tank levels as well as creates an "Online" status device to help alert you potentially if the system is experiencing
+#   an error.
+
+# We need to add an additional topic to the default MQTT topics.  We include "/set" so we can use that to trigger the API to send the command to 
+# OpenHab
+
+# You will need to replace the device ID's below with the ones from your installation.  Use the Node Red script in this repo under /node-red to 
+#    generate these ids specific to your installation.
+
+homeassistant:
+    customize:
+        ## Customize the entities as you like here.  Since each has a unique_id, you can do it in the interface, or here where I found it easier to 
+        #      keep track of.  Plus, it is easier to copy-paste-replace for multiple devices.
+        sensor.oc_tank_fresh_level:
+            friendly_name:      "Fresh Tank"
+        sensor.oc_tank_fresh_online:
+            friendly_name:      "Fresh Tank Online"
+        sensor.oc_tank_fuel_level:
+            friendly_name:      "Fuel Tank"
+        sensor.oc_tank_fuel_online:
+            friendly_name:      "Fuel Tank Online"
+        sensor.oc_tank_grey1_level:
+            friendly_name:      "Bathroom Grey Tank"
+        sensor.oc_tank_grey1_online:
+            friendly_name:      "Bathroom Grey Tank Online"
+        sensor.oc_tank_grey2_level:
+            friendly_name:      "Kitchen Grey Tank"
+        sensor.oc_tank_grey2_online:
+            friendly_name:      "Kitchen Grey Tank Online"
+        sensor.oc_tank_black1_level:
+            friendly_name:      "Bathroom Black Tank"
+        sensor.oc_tank_black1_online:
+            friendly_name:      "Bathroom Black Tank Online"
+        sensor.oc_tank_black2_level:
+            friendly_name:      "Garage Black Tank"
+        sensor.oc_tank_black2_online:
+            friendly_name:      "Garage Black Tank Online"
+
+sensor:
+
+
+# ==============================================================================================================#
+    -   platform:               mqtt
+        name:                   oc_tank_fresh_level
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A01_tank_level/state"
+        unit_of_measurement:    '%'
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A01_tank_level"
+        icon:                   "mdi:water-percent"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A01_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+
+    -   platform:               mqtt
+        name:                   oc_tank_fresh_online
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A01_online/state"
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A01_online"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A01_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+
+# ==============================================================================================================#
+    -   platform:               mqtt
+        name:                   oc_tank_grey1_level
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A02_tank_level/state"
+        unit_of_measurement:    '%'
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A02_tank_level"
+        icon:                   "mdi:water-percent"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A02_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+        
+    -   platform:               mqtt
+        name:                   oc_tank_grey1_online
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A02_online/state"
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A02_online"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A02_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+
+# ==============================================================================================================#
+    -   platform:               mqtt
+        name:                   oc_tank_black1_level
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A03_tank_level/state"
+        unit_of_measurement:    '%'
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A03_tank_level"
+        icon:                   "mdi:water-percent"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A03_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+        
+    -   platform:               mqtt
+        name:                   oc_tank_black1_online
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A03_online/state"
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A03_online"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A03_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+        
+# ==============================================================================================================#
+    -   platform:               mqtt
+        name:                   oc_tank_grey2_level
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A04_tank_level/state"
+        unit_of_measurement:    '%'
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A04_tank_level"
+        icon:                   "mdi:water-percent"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A04_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+        
+    -   platform:               mqtt
+        name:                   oc_tank_grey2_online
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A04_online/state"
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A04_online"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A04_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+
+# ==============================================================================================================#
+    -   platform:               mqtt
+        name:                   oc_tank_black2_level
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A05_tank_level/state"
+        unit_of_measurement:    '%'
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A05_tank_level"
+        icon:                   "mdi:water-percent"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A05_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+        
+    -   platform:               mqtt
+        name:                   oc_tank_black2_online
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A05_online/state"
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A05_online"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A05_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+# ==============================================================================================================#
+    -   platform:               mqtt
+        name:                   oc_tank_fuel_level
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A09_tank_level/state"
+        unit_of_measurement:    '%'
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A09_tank_level"
+        icon:                   "mdi:water-percent"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A09_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+        
+    -   platform:               mqtt
+        name:                   oc_tank_fuel_online
+        state_topic:            "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A09_online/state"
+        unique_id:              "idsmyrv_tank_sensor_thing_0000000DA7250A09_online"
+        availability_topic:     "smarthome/items/idsmyrv_tank_sensor_thing_0000000DA7250A09_online/state"
+        payload_available:      "ON"
+        payload_not_available:  "OFF"
+        
