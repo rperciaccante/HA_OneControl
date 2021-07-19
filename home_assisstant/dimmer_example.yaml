@@ -1,0 +1,84 @@
+# https://www.home-assistant.io/integrations/light.mqtt/
+
+# We need to add an additional topic to the default MQTT topics.  We include "/set" so we can use that to trigger the API to send the command to 
+# OpenHab
+
+# You will need to replace the device ID's below with the ones from your installation.  Use the Node Red script in this repo under /node-red to 
+#    generate these ids specific to your installation.
+
+homeassistant:
+    customize:
+    
+        ## Customize the entities as you like here.  Since each has a unique_id, you can do it in the interface, or here where I found it easier to 
+        #      keep track of.  Plus, it is easier to copy-paste-replace for multiple devices.
+        light.oc_floodlight_dimmer:
+            friendly_name:      "Floodlight"
+            
+        binary_sensor.oc_floodlight_online:
+            friendly_name:      "Floodlight Online Status"
+            
+        input_select.oc_floodlight_dimmer_mode:
+            friendly_name:      "Floodlight Dimmer Mode"
+
+        automation.oc_set_floodlight_dimmer_mode:
+            friendly_name:      "Automation: Set Floodlight Mode"
+
+            
+light:
+    - platform:                 mqtt
+      unique_id:                "idsmyrv_light_thing_0000000DA6BB1408_dimmer"
+      name:                     oc_floodlight_dimmer
+      state_topic:              "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_dimmer/state"
+      command_topic:            "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_dimmer/set"
+      brightness_state_topic:   "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_dimmer/state"
+      brightness_command_topic: "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_dimmer/set"
+      on_command_type:          last
+      availability_topic:       "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_online/state"
+      payload_available:        "ON"
+      payload_not_available:    "OFF"
+      payload_on:               "ON"
+      payload_off:              "OFF"
+      brightness_scale:         100
+      optimistic:               false
+      qos:                      0
+      retain:                   false
+
+binary_sensor:
+    - platform:               mqtt
+      name:                   oc_floodlight_online
+      device_class:           connectivity
+      unique_id:              "id_idsmyrv_light_thing_0000000DA6BB1408_online"
+      state_topic:            "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_online/state"
+      availability_topic:     "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_online/state"
+      payload_available:      "ON"
+      payload_not_available:  "OFF"
+      
+input_select:
+    oc_floodlight_dimmer_mode:
+        name:                   oc_floodlight_dimmer_mode
+        options:
+        - OFF
+        - DIMMER
+        - BLINK
+        - SWELL
+        initial: DIMMER
+
+# This automation is needed to notify OneControl that the light mode has been changed.  By default, when this command is received, OneControl will turn on the light
+#   I added a "light.turn_off" service call out of personal preference.
+automation:
+    - id:                       oc_set_floodlight_dimmer_mode
+      alias:                    oc_set_floodlight_dimmer_mode
+      description:              ''
+      trigger:
+      - platform:               state
+        entity_id:              input_select.oc_floodlight_dimmer_mode
+      condition: []
+      action:
+      - service:                mqtt.publish
+        data:
+          topic:                "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_mode/set"
+          payload_template:     '{{trigger.to_state.state}}'
+      - service:                light.turn_off
+        entity_id:              light.oc_floodlight_dimmer
+      mode: single
+        
