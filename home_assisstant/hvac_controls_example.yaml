@@ -1,0 +1,95 @@
+homeassistant:
+    customize:
+        ## Customize the entities as you like ##
+        sensor.oc_garage_hvac_temp:
+            friendly_name:          "Garage Temp"
+        sensor.oc_garage_hvac_status:
+            friendly_name:          "Garage HVAC State"
+        sensor.oc_garage_hvac_temp_max:
+            friendly_name:          "Garage Max Temp"
+        sensor.oc_garage_hvac_temp_min:
+            friendly_name:          "Garage Min Temp"
+        binary_sensor.oc_garage_hvac_online:
+            friendly_name:          "Garage HVAC Online"
+        climnate.oc_garage_hvac:
+            friendly_name:          "Garage Thermostat"
+
+binary_sensor:
+    -   platform:                   mqtt
+        name:                       oc_garage_hvac_online
+        device_class:               connectivity
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_online_state"
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
+        payload_available:          "ON"
+        payload_not_available:      "OFF"
+        
+sensor:
+    #-------------------------------------------------------------------#
+    #                          Garage HVAC                              #
+    #-------------------------------------------------------------------#
+    -   platform:                   mqtt
+        name:                       oc_garage_hvac_temp
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_inside_temperature/state"
+        unit_of_measurement:        '°F'
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
+        payload_available:          "ON"
+        payload_not_available:      "OFF"
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_inside_temperature"
+        device_class:               "temperature"
+        
+    -   platform:                   mqtt
+        name:                       oc_garage_hvac_status
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_status/state"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
+        payload_available:          "ON"
+        payload_not_available:      "OFF"
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_status"
+
+    -   platform:                   mqtt
+        name:                       oc_garage_hvac_temp_max
+        unit_of_measurement:        '°F'
+        device_class:               "temperature"
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_high_temperature/state"
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_high_temperature_state"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
+        payload_available:          "ON"
+        payload_not_available:      "OFF"
+        
+    -   platform:                   mqtt
+        name:                       oc_garage_hvac_temp_min
+        unit_of_measurement:        '°F'
+        device_class:               "temperature"
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_low_temperature/state"
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_low_temperature_state"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
+        payload_available:          "ON"
+        payload_not_available:      "OFF"
+
+climate:
+    -   platform: mqtt
+        name: oc_garage_hvac
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
+        payload_available:          "ON"
+        payload_not_available:      "OFF"
+        current_temperature_topic:  "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_inside_temperature/state"
+        fan_mode_command_topic:     "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_fan_mode/set"
+        fan_mode_state_topic:       "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_fan_mode/state"
+        fan_modes:
+            - "AUTO"
+            - "HIGH"
+            - "LOW"
+        mode_command_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_hvac_mode/set"
+        mode_state_topic:           "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_hvac_mode/state"
+        modes:
+            - "heat"
+            - "cool"
+            - "off"
+        min_temp:                   45
+        max_temp:                   100
+        temperature_high_command_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_high_temperature/set"
+        temperature_high_state_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_high_temperature/state"
+        temperature_low_command_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_low_temperature/set"
+        temperature_low_state_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_low_temperature/state"
+        temp_step:                  1
+        
