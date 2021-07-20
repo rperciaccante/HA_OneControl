@@ -1,3 +1,9 @@
+# We need to add an additional topic to the default MQTT topics.  We include "/set" so we can use that to trigger the API to send the command to 
+# OpenHab
+
+# You will need to replace the device ID's below with the ones from your installation.  Use the Node Red script in this repo under /node-red to 
+#    generate these ids specific to your installation.
+
 homeassistant:
     customize:
         ## Customize the entities as you like ##
@@ -13,6 +19,8 @@ homeassistant:
             friendly_name:          "Garage HVAC Online"
         climnate.oc_garage_hvac:
             friendly_name:          "Garage Thermostat"
+        automation.oc_set_outside_temp:
+            friendly_name:          "Set Garage HVAC Outside Temp"
 
 binary_sensor:
     -   platform:                   mqtt
@@ -65,6 +73,16 @@ sensor:
         availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
         payload_available:          "ON"
         payload_not_available:      "OFF"
+    
+    -   platform:                   mqtt
+        name:                       oc_garage_hvac_temp_outside
+        unit_of_measurement:        '°F'
+        device_class:               "temperature"
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_outside_temperature/state"
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_outside_temperature"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
+        payload_available:          "ON"
+        payload_not_available:      "OFF"
 
 climate:
     -   platform: mqtt
@@ -92,4 +110,19 @@ climate:
         temperature_low_command_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_low_temperature/set"
         temperature_low_state_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_low_temperature/state"
         temp_step:                  1
+
+automation:
+    - id:                       oc_set_outside_temp
+      alias:                    oc_set_outside_temp
+      description:              ''
+      trigger:
+      - platform:               state
+        entity_id:              sensor.outside_temp
+      condition: []
+      action:
+      - service:                mqtt.publish
+        data:
+          topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_outside_temperature/set"
+          payload_template:     '{{trigger.to_state.state}}'
+      mode: single
         
