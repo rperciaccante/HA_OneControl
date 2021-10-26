@@ -19,8 +19,8 @@
         "rejectUnauthorized": false,
         "withCredentials": false,
         "timeout": "30",
-        "x": 110,
-        "y": 140,
+        "x": 130,
+        "y": 160,
         "wires": [
             [
                 "5448ca2c.133a3c"
@@ -48,8 +48,8 @@
         "topic": "",
         "payload": "START",
         "payloadType": "str",
-        "x": 120,
-        "y": 100,
+        "x": 140,
+        "y": 120,
         "wires": [
             [
                 "2c32c2b7.957756"
@@ -64,8 +64,8 @@
         "property": "payload.payload",
         "action": "",
         "pretty": false,
-        "x": 110,
-        "y": 220,
+        "x": 130,
+        "y": 240,
         "wires": [
             [
                 "1cfc695d.cc2327"
@@ -80,8 +80,8 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 110,
-        "y": 180,
+        "x": 130,
+        "y": 200,
         "wires": [
             [
                 "5dceeec9.23416"
@@ -108,7 +108,7 @@
         "type": "debug",
         "z": "1e5b3032.718608",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -130,8 +130,8 @@
             "8bdf1733.e797f8",
             "67e6fe7c.a2b16"
         ],
-        "x": 295,
-        "y": 220,
+        "x": 315,
+        "y": 240,
         "wires": []
     },
     {
@@ -145,8 +145,8 @@
         "inout": "out",
         "septopics": true,
         "property": "payload.topic",
-        "x": 110,
-        "y": 260,
+        "x": 130,
+        "y": 280,
         "wires": [
             [
                 "4d0e80db.5b368",
@@ -167,11 +167,12 @@
         "nl": false,
         "rap": true,
         "rh": 0,
-        "x": 110,
-        "y": 540,
+        "x": 190,
+        "y": 660,
         "wires": [
             [
-                "7a79c778.1dbd48"
+                "7a79c778.1dbd48",
+                "3c9f68ec.a01a9"
             ]
         ]
     },
@@ -188,8 +189,8 @@
         "persist": false,
         "proxy": "",
         "authType": "",
-        "x": 720,
-        "y": 540,
+        "x": 820,
+        "y": 660,
         "wires": [
             [
                 "8752f523.3597b8"
@@ -201,7 +202,7 @@
         "type": "debug",
         "z": "1e5b3032.718608",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -209,8 +210,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 930,
-        "y": 540,
+        "x": 1030,
+        "y": 660,
         "wires": []
     },
     {
@@ -226,8 +227,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 490,
-        "y": 560,
+        "x": 530,
+        "y": 700,
         "wires": []
     },
     {
@@ -250,8 +251,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 270,
-        "y": 540,
+        "x": 350,
+        "y": 660,
         "wires": [
             [
                 "99e7474b.59c7a8",
@@ -273,12 +274,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 490,
-        "y": 520,
+        "x": 570,
+        "y": 660,
         "wires": [
             [
-                "497322ef.a2675c",
-                "7f20ab59.4a0ce4"
+                "7f20ab59.4a0ce4",
+                "497322ef.a2675c"
             ]
         ]
     },
@@ -287,17 +288,16 @@
         "type": "function",
         "z": "1e5b3032.718608",
         "name": "Collapse Message",
-        "func": "var msg1 = {}\nmsg1.record = msg\nmsg1.topic = msg.payload.topic\nmsg1.payload = msg.payload.payload\nmsg1.payload.event = msg.event\nmsg1.payload.eventtype = msg.payload.type\nreturn msg1;",
+        "func": "\nvar msg1 = {}\n\nmsg1.record = msg\nmsg1.topic = msg.payload.topic\nmsg1.payload = msg.payload.payload\nmsg1.payload.event = msg.event\nmsg1.payload.eventtype = msg.payload.type\nreturn msg1;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 150,
-        "y": 300,
+        "x": 170,
+        "y": 320,
         "wires": [
             [
-                "f08d54c4.2612a8",
                 "bd149ce4.3337b"
             ]
         ]
@@ -316,25 +316,8 @@
         "correl": "",
         "expiry": "",
         "broker": "4410210f.6939c",
-        "x": 1010,
+        "x": 890,
         "y": 320,
-        "wires": []
-    },
-    {
-        "id": "f08d54c4.2612a8",
-        "type": "debug",
-        "z": "1e5b3032.718608",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 430,
-        "y": 280,
         "wires": []
     },
     {
@@ -350,46 +333,29 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 330,
-        "y": 180,
+        "x": 350,
+        "y": 200,
         "wires": []
     },
     {
         "id": "75184c30.50a7d4",
         "type": "function",
         "z": "1e5b3032.718608",
-        "name": "Format Values - ItemStateEvent",
-        "func": "\nfunction roundNum0(i) {\n    i = Number(i)\n    i = i.toFixed(0)\n    i = Number(i)\n    return i\n}\nvar msg1 = {}\nmsg1.record = msg.record\nmsg1.topic = msg.topic\n\nswitch (msg.payload.type) {\n    case \"Decimal\":\n        msg1.payload = roundNum0(msg.payload.value)\n        break;\n    default:\n        msg1.payload = msg.payload.value\n    }\n    \n    \nreturn msg1;",
+        "name": "(OLD) Format Values - ItemStateEvent",
+        "func": "\nfunction roundNum0(i) {\n    i = Number(i)\n    i = i.toFixed(0)\n    i = Number(i)\n    return i\n}\nvar msg1 = {}\nmsg1.record = msg.record\nmsg1.topic = msg.topic\n\nswitch (msg.payload.type) {\n    case \"Decimal\":\n        msg1.payload = roundNum0(msg.payload.value)\n        break;\n    default:\n        msg1.payload = msg.payload.value.toLowerCase()\n    }\n    \n    \nreturn msg1;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 510,
-        "y": 320,
+        "x": 550,
+        "y": 360,
         "wires": [
             [
                 "b2843a32.ff9ab8",
-                "39b35fb4.2e251"
+                "a9bf6223.535dc"
             ]
         ]
-    },
-    {
-        "id": "b9f490bd.7cd8a",
-        "type": "debug",
-        "z": "1e5b3032.718608",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 890,
-        "y": 240,
-        "wires": []
     },
     {
         "id": "bd149ce4.3337b",
@@ -410,26 +376,36 @@
                 "vt": "str"
             },
             {
+                "t": "eq",
+                "v": "ItemStateChangedEvent",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "ItemCommandEvent",
+                "vt": "str"
+            },
+            {
                 "t": "else"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 3,
-        "x": 160,
-        "y": 360,
+        "outputs": 5,
+        "x": 180,
+        "y": 380,
         "wires": [
             [
                 "75184c30.50a7d4"
             ],
-            [
-                "fba203c9.f279c"
-            ],
+            [],
+            [],
+            [],
             []
         ]
     },
     {
-        "id": "a2419d4d.a0e4f",
+        "id": "a47a03e9.b14cf",
         "type": "debug",
         "z": "1e5b3032.718608",
         "name": "",
@@ -441,31 +417,12 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 770,
-        "y": 380,
+        "x": 530,
+        "y": 620,
         "wires": []
     },
     {
-        "id": "fba203c9.f279c",
-        "type": "function",
-        "z": "1e5b3032.718608",
-        "name": "Format Values - ThingStatusInfoEvent",
-        "func": "function cleanUID(i) {\n    i = i.replace(/:/g, \"_\")\n    i = i.replace(/-/g, \"_\")\n    return i\n}\nvar msg1 = {}\nmsg1.record = msg.record\nmsg1.topic = cleanUID(msg.topic)\nmsg1.payload = msg.payload.status\n    \n    \nreturn msg1;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 530,
-        "y": 360,
-        "wires": [
-            [
-                "a2419d4d.a0e4f"
-            ]
-        ]
-    },
-    {
-        "id": "a47a03e9.b14cf",
+        "id": "7f20ab59.4a0ce4",
         "type": "debug",
         "z": "1e5b3032.718608",
         "name": "",
@@ -477,37 +434,12 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 450,
-        "y": 480,
+        "x": 770,
+        "y": 620,
         "wires": []
     },
     {
-        "id": "39b35fb4.2e251",
-        "type": "switch",
-        "z": "1e5b3032.718608",
-        "name": "",
-        "property": "topic",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "cont",
-                "v": "0000000DA7271800",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 730,
-        "y": 240,
-        "wires": [
-            [
-                "b9f490bd.7cd8a"
-            ]
-        ]
-    },
-    {
-        "id": "7f20ab59.4a0ce4",
+        "id": "a9bf6223.535dc",
         "type": "debug",
         "z": "1e5b3032.718608",
         "name": "",
@@ -519,8 +451,35 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 690,
-        "y": 480,
+        "x": 890,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "3c9f68ec.a01a9",
+        "type": "debug",
+        "z": "1e5b3032.718608",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 350,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "8e85cc7da46a66b1",
+        "type": "comment",
+        "z": "1e5b3032.718608",
+        "name": "This section monitors changes to the MQTT /Set topic and converts them to API calls to the OneControl system",
+        "info": "",
+        "x": 500,
+        "y": 580,
         "wires": []
     },
     {
