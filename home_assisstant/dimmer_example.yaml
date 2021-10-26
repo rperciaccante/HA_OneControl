@@ -8,9 +8,7 @@
 
 homeassistant:
     customize:
-    
-        ## Customize the entities as you like here.  Since each has a unique_id, you can do it in the interface, or here where I found it easier to 
-        #      keep track of.  Plus, it is easier to copy-paste-replace for multiple devices.
+        ## Customize the entities as you like ##
         light.oc_floodlight_dimmer:
             friendly_name:      "Floodlight"
             
@@ -34,10 +32,10 @@ light:
       brightness_command_topic: "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_dimmer/set"
       on_command_type:          last
       availability_topic:       "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_online/state"
-      payload_available:        "ON"
-      payload_not_available:    "OFF"
-      payload_on:               "ON"
-      payload_off:              "OFF"
+      payload_available:        "on"
+      payload_not_available:    "off"
+      payload_on:               "on"
+      payload_off:              "off"
       brightness_scale:         100
       optimistic:               false
       qos:                      0
@@ -50,8 +48,10 @@ binary_sensor:
       unique_id:              "id_idsmyrv_light_thing_0000000DA6BB1408_online"
       state_topic:            "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_online/state"
       availability_topic:     "smarthome/items/idsmyrv_light_thing_0000000DA6BB1408_online/state"
-      payload_available:      "ON"
-      payload_not_available:  "OFF"
+      payload_available:      "on"
+      payload_not_available:  "off"
+      payload_on:               "on"
+      payload_off:              "off"
       
 input_select:
     oc_floodlight_dimmer_mode:
@@ -63,8 +63,6 @@ input_select:
         - SWELL
         initial: DIMMER
 
-# This automation is needed to notify OneControl that the light mode has been changed.  By default, when this command is received, OneControl will turn on the light
-#   I added a "light.turn_off" service call out of personal preference.
 automation:
     - id:                       oc_set_floodlight_dimmer_mode
       alias:                    oc_set_floodlight_dimmer_mode
@@ -81,4 +79,3 @@ automation:
       - service:                light.turn_off
         entity_id:              light.oc_floodlight_dimmer
       mode: single
-        
