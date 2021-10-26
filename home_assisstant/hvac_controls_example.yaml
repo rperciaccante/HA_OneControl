@@ -7,114 +7,123 @@
 homeassistant:
     customize:
         ## Customize the entities as you like ##
-        sensor.oc_garage_hvac_temp:
-            friendly_name:          "Garage Temp"
-        sensor.oc_garage_hvac_status:
-            friendly_name:          "Garage HVAC State"
-        sensor.oc_garage_hvac_temp_max:
-            friendly_name:          "Garage Max Temp"
-        sensor.oc_garage_hvac_temp_min:
-            friendly_name:          "Garage Min Temp"
-        binary_sensor.oc_garage_hvac_online:
-            friendly_name:          "Garage HVAC Online"
-        climnate.oc_garage_hvac:
-            friendly_name:          "Garage Thermostat"
-        automation.oc_set_outside_temp:
-            friendly_name:          "Set Garage HVAC Outside Temp"
+        sensor.oc_bedroom_hvac_temp:
+            friendly_name:          "Bedroom Temp"
+        sensor.oc_bedroom_hvac_status:
+            friendly_name:          "Bedroom HVAC State"
+        sensor.oc_bedroom_hvac_temp_max:
+            friendly_name:          "Bedroom Max Temp"
+        sensor.oc_bedroom_hvac_temp_min:
+            friendly_name:          "Bedroom Min Temp"
+        binary_sensor.oc_bedroom_hvac_online:
+            friendly_name:          "Bedroom HVAC Online"
+        climnate.oc_bedroom_hvac:
+            friendly_name:          "Bedroom Thermostat"
+        automation.oc_bedroom_hvac_set_outside_temp:
+            friendly_name:          "Automation: Set Bedroom HVAC Outside Temp"
 
 binary_sensor:
     -   platform:                   mqtt
-        name:                       oc_garage_hvac_online
+        name:                       oc_bedroom_hvac_online
         device_class:               connectivity
-        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_online_state"
-        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
-        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
-        payload_available:          "ON"
-        payload_not_available:      "OFF"
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271002_online_state"
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_online/state"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_online/state"
+        payload_available:          "on"
+        payload_not_available:      "off"
+        payload_on:             "on"
+        payload_off:            "off"
         
 sensor:
     #-------------------------------------------------------------------#
-    #                          Garage HVAC                              #
+    #                          Bedroom HVAC                              #
     #-------------------------------------------------------------------#
     -   platform:                   mqtt
-        name:                       oc_garage_hvac_temp
-        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_inside_temperature/state"
+        name:                       oc_bedroom_hvac_temp
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_inside_temperature/state"
         unit_of_measurement:        '°F'
-        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
-        payload_available:          "ON"
-        payload_not_available:      "OFF"
-        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_inside_temperature"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_online/state"
+        payload_available:          "on"
+        payload_not_available:      "off"
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271002_inside_temperature"
         device_class:               "temperature"
         
     -   platform:                   mqtt
-        name:                       oc_garage_hvac_status
-        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_status/state"
-        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
-        payload_available:          "ON"
-        payload_not_available:      "OFF"
-        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_status"
+        name:                       oc_bedroom_hvac_status
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_status/state"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_online/state"
+        payload_available:          "on"
+        payload_not_available:      "off"
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271002_status"
+        icon:                       mdi:run
 
     -   platform:                   mqtt
-        name:                       oc_garage_hvac_temp_max
+        name:                       oc_bedroom_hvac_temp_max
         unit_of_measurement:        '°F'
         device_class:               "temperature"
-        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_high_temperature/state"
-        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_high_temperature_state"
-        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
-        payload_available:          "ON"
-        payload_not_available:      "OFF"
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_high_temperature/state"
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271002_high_temperature_state"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_online/state"
+        payload_available:          "on"
+        payload_not_available:      "off"
+        icon:                       mdi:thermometer-chevron-up
         
     -   platform:                   mqtt
-        name:                       oc_garage_hvac_temp_min
+        name:                       oc_bedroom_hvac_temp_min
         unit_of_measurement:        '°F'
         device_class:               "temperature"
-        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_low_temperature/state"
-        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_low_temperature_state"
-        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
-        payload_available:          "ON"
-        payload_not_available:      "OFF"
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_low_temperature/state"
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271002_low_temperature_state"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_online/state"
+        payload_available:          "on"
+        payload_not_available:      "off"
+        icon:                       mdi:thermometer-chevron-down
     
     -   platform:                   mqtt
-        name:                       oc_garage_hvac_temp_outside
+        name:                       oc_bedroom_hvac_temp_outside
         unit_of_measurement:        '°F'
         device_class:               "temperature"
-        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_outside_temperature/state"
-        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003_outside_temperature"
-        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
-        payload_available:          "ON"
-        payload_not_available:      "OFF"
+        state_topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_outside_temperature/state"
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271002_outside_temperature"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_online/state"
+        payload_available:          "on"
+        payload_not_available:      "off"
 
 climate:
     -   platform:                   mqtt
-        name:                       oc_garage_hvac
-        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271003"
-        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_online/state"
-        payload_available:          "ON"
-        payload_not_available:      "OFF"
-        current_temperature_topic:  "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_inside_temperature/state"
-        fan_mode_command_topic:     "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_fan_mode/set"
-        fan_mode_state_topic:       "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_fan_mode/state"
+        name:                       oc_bedroom_hvac
+        unique_id:                  "idsmyrv_hvac_thing_0000000DA7271002"
+        #action_topic:               "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_status/state"
+        availability_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_online/state"
+        payload_available:          "on"
+        payload_not_available:      "off"
+        current_temperature_topic:  "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_inside_temperature/state"
+        fan_mode_command_topic:     "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_fan_mode/set"
+        fan_mode_state_topic:       "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_fan_mode/state"
         fan_modes:
-            - "AUTO"
-            - "HIGH"
-            - "LOW"
-        mode_command_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_hvac_mode/set"
-        mode_state_topic:           "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_hvac_mode/state"
+            - "auto"
+            - "high"
+            - "low"
+        mode_command_topic:         "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_hvac_mode/set"
+        mode_state_topic:           "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_hvac_mode/state"
         modes:
             - "heat"
             - "cool"
             - "off"
         min_temp:                   45
         max_temp:                   100
-        temperature_high_command_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_high_temperature/set"
-        temperature_high_state_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_high_temperature/state"
-        temperature_low_command_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_low_temperature/set"
-        temperature_low_state_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_low_temperature/state"
+        precision:                  1
+        retain:                     true
+        send_if_off:                false
+        temperature_high_command_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_high_temperature/set"
+        temperature_high_state_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_high_temperature/state"
+        temperature_low_command_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_low_temperature/set"
+        temperature_low_state_topic: "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_low_temperature/state"
         temp_step:                  1
 
 automation:
-    - id:                       oc_set_outside_temp
-      alias:                    oc_set_outside_temp
+    - id:                       oc_bedroom_hvac_set_outside_temp
+      alias:                    oc_bedroom_hvac_set_outside_temp
       description:              ''
       trigger:
       - platform:               state
@@ -123,7 +132,7 @@ automation:
       action:
       - service:                mqtt.publish
         data:
-          topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271003_outside_temperature/set"
+          topic:                "smarthome/items/idsmyrv_hvac_thing_0000000DA7271002_outside_temperature/set"
           payload_template:     '{{trigger.to_state.state}}'
       mode: single
         
