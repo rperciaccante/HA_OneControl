@@ -6,3 +6,18 @@ Using NodeRed, a connetion is made to the OneControl bridge, which is running Op
 ## High Level Overview ##
 
 In certain Lippert OneControl implementations, there is the ability to interface with the control system from outside the proprietary CANbus architecture, and control components from external systems, such as home automation platforms.  The function that makes this possible it is the fact that they have implemented a read-ony instance of OpenHab as the functional bridge between the IP network provided by the wireless access point and the CANbus controller in the OneControl Touch Panel.  Because this OpenHab instance is read-only. no additional components can be added to the OpenHab controller, but API access is permuitted, and this is what I have been using.
+
+### Components Used - Software ###
+1. Node-Red ([https://nodered.org/](https://nodered.org/)])
+  - Because I am using Home Assistant as my automation platform, I am using the official Node Red add-on
+  - Node Red can be installed onto just about any platform - see link above
+  - The following Node Red nodes have been added to the default node set:
+    - node-red-contrib-sse-client ([https://flows.nodered.org/node/node-red-contrib-sse-client](https://flows.nodered.org/node/node-red-contrib-sse-client)])
+2. Mosquitto MQTT broker ([https://mosquitto.org/](https://mosquitto.org/)])
+  - Because I am using Home Assistant as my automation platform, I am using the official MQTT broker add-on
+  - Mosquitto can be installed onto just about any platform - see link above.
+3. Home Assistant ([https://www.home-assistant.io/](https://www.home-assistant.io/)])
+  - Incredibly powerful and flexible automation platform
+
+** Please note **
+This project focuses on Home Assistant as the automation platform as a matter of personal perference.
