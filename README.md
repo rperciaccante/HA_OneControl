@@ -23,3 +23,8 @@ During normal operations, Node Red subscribes to the official OpenHab event API,
 
 ** Please note **
 This project focuses on Home Assistant as the automation platform as a matter of personal perference, however, the Node Red flows sync with MQTT, meaning that any other platform capable of publishing and subscribing to MQTT could be adapted to use this process.
+
+## How To ##
+
+1. Install Node Red according to the instruction on their website.  Follow instructions in the node_red section above.
+2. If you are using Home Assistant, follow the instructions in the home_assistant section above.
